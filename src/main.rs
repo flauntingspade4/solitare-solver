@@ -32,5 +32,5 @@ pub fn evaluate(board: &mut Board, depth: usize, highest_depth: &mut usize) -> b
         board.play_move(r#move);
     }
 
-    return false;
+    false
 }

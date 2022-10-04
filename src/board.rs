@@ -1,5 +1,17 @@
 use std::fmt::Display;
 
+macro_rules! try_add {
+    ($moves: expr, $board: expr, $from: expr, $( $remove_to:expr ),*) => {
+        {
+            $(
+                if $board.active($remove_to.0) && !$board.active($remove_to.1) {
+                    $moves.push(Move::new($from, $remove_to.0, $remove_to.1))
+                }
+            )*
+        }
+    };
+}
+
 pub struct Board {
     inner: u64,
 }
@@ -42,7 +54,43 @@ impl Board {
     }
 
     fn all_moves_from(&self, from: u64, moves: &mut Vec<Move>) {
-        self.try_add(
+        match from {
+            0 => try_add!(moves, self, from, (1, 2), (9, 10), (17, 18), (25, 26)),
+            1 => try_add!(moves, self, from, (2, 3), (8, 14), (0, 17), (32, 29)),
+            2 => try_add!(moves, self, from, (1, 0)),
+            3 => try_add!(moves, self, from, (2, 1)),
+            4 => try_add!(moves, self, from, (7, 8), (3, 5)),
+            5 => try_add!(moves, self, from, (3, 4), (6, 32)),
+            6 => try_add!(moves, self, from, (2, 7), (32, 25)),
+            7 => try_add!(moves, self, from, (8, 9), (2, 6)),
+            8 => try_add!(moves, self, from, (7, 4), (14, 13), (9, 16), (1, 32)),
+            9 => try_add!(moves, self, from, (8, 7), (10, 11), (16, 22), (0, 25)),
+            10 => try_add!(moves, self, from, (9, 0)),
+            11 => try_add!(moves, self, from, (10, 9)),
+            12 => try_add!(moves, self, from, (11, 13), (15, 16)),
+            13 => try_add!(moves, self, from, (11, 12), (14, 8)),
+            14 => try_add!(moves, self, from, (10, 15), (8, 1)),
+            15 => try_add!(moves, self, from, (10, 14), (16, 17)),
+            16 => try_add!(moves, self, from, (9, 8), (15, 12), (22, 23), (17, 24)),
+            17 => try_add!(moves, self, from, (0, 1), (16, 15), (18, 19), (24, 30)),
+            18 => try_add!(moves, self, from, (17, 0)),
+            19 => try_add!(moves, self, from, (18, 17)),
+            20 => try_add!(moves, self, from, (21, 24), (19, 23)),
+            21 => try_add!(moves, self, from, (24, 25), (18, 22)),
+            22 => try_add!(moves, self, from, (16, 9), (18, 21)),
+            23 => try_add!(moves, self, from, (22, 16), (19, 20)),
+            24 => try_add!(moves, self, from, (25, 32), (17, 16), (21, 20), (30, 31)),
+            25 => try_add!(moves, self, from, (32, 6), (0, 9), (24, 21), (26, 27)),
+            26 => try_add!(moves, self, from, (25, 0)),
+            27 => try_add!(moves, self, from, (26, 25)),
+            28 => try_add!(moves, self, from, (29, 32), (27, 31)),
+            29 => try_add!(moves, self, from, (32, 1), (26, 30)),
+            30 => try_add!(moves, self, from, (26, 29), (24, 17)),
+            31 => try_add!(moves, self, from, (27, 28), (30, 24)),
+            32 => try_add!(moves, self, from, (6, 5), (1, 8), (25, 24), (29, 28)),
+            _ => panic!("Illegal 'from' index {}", from),
+        };
+        /*self.try_add(
             from,
             match from {
                 0 => &[(1, 2), (9, 10), (17, 18), (25, 26)],
@@ -81,7 +129,7 @@ impl Board {
                 _ => panic!("Illegal 'from' index {}", from),
             },
             moves,
-        )
+        )*/
     }
 
     fn try_add(&self, from: u64, remove_to: &[(u64, u64)], moves: &mut Vec<Move>) {
