@@ -17,9 +17,9 @@ pub fn evaluate(board: &mut Board, depth: usize) -> bool {
         HIGHEST_DEPTH.store(depth, Ordering::SeqCst);
         println!("New highest depth {}", depth);
     }
-    /*if depth == 0 {
-        return false;
-    }*/
+    if depth == 28 {
+        return true;
+    }
 
     let moves = board.all_legal_moves();
 
