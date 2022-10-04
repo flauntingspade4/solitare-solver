@@ -1,20 +1,16 @@
 mod board;
 
-use std::sync::atomic::{AtomicUsize, Ordering};
-
 use board::Board;
 
 fn main() {
     let mut board = Board::default();
 
-    println!("{}", evaluate(&mut board, 0));
+    println!("{}", evaluate(&mut board, 0, &mut 0));
 }
 
-static HIGHEST_DEPTH: AtomicUsize = AtomicUsize::new(0);
-
-pub fn evaluate(board: &mut Board, depth: usize) -> bool {
-    if depth > HIGHEST_DEPTH.load(Ordering::SeqCst) {
-        HIGHEST_DEPTH.store(depth, Ordering::SeqCst);
+pub fn evaluate(board: &mut Board, depth: usize, highest_depth: &mut usize) -> bool {
+    if depth > *highest_depth {
+        *highest_depth = depth;
         println!("New highest depth {}", depth);
     }
 
@@ -28,7 +24,7 @@ pub fn evaluate(board: &mut Board, depth: usize) -> bool {
             return true;
         }
 
-        if evaluate(board, depth + 1) {
+        if evaluate(board, depth + 1, highest_depth) {
             println!("{:?}", r#move);
             return true;
         }
